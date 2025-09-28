@@ -1,34 +1,60 @@
-<div class="view view--half-vertical">
 <!-- Main content area -->
 <div class="layout layout--col">
-        <!-- Usage metrics with gauges -->
+        <!-- Usage metrics with progress bars -->
         <div class="item w--full flex-1">
             <div class="layout layout--col gap--medium w--full h--full justify--center">
-                <!-- CPU Gauge -->
-                <div class="item w--full">
+                <div class="item">
+                  <div class="meta"></div>
+                  <div class="content text--center">
+                    <span class="value value--small value--tnums">{{ metrics.system_name }}</span>
                     <div class="metric-label-with-icon">
+                      <span class="label">{{ metrics.host_info.hostname }}</span>
+                    </div>
+                  </div>
+                </div>
+                <!-- CPU Progress Bar -->
+                <div class="item w--full">
+                <div class="progress-bar progress-bar--emphasis-2 w--full">
+                    <div class="content w--full">
+                    <span class="label">
                         {{ cpu_icon }}
-                        <span class="label">CPU</span>
+                        CPU: {{ metrics.cpu.usage_percent | round }}%
+                    </span>
                     </div>
-                    <div id="cpu-gauge-vert" class="gauge-container-vertical"></div>
+                    <div class="track w--full">
+                    <div class="fill" style="width: {{ metrics.cpu.usage_percent }}%"></div>
+                    </div>
+                </div>
                 </div>
                 
-                <!-- Memory Gauge -->
+                <!-- Memory Progress Bar -->
                 <div class="item w--full">
-                    <div class="metric-label-with-icon">
+                <div class="progress-bar progress-bar--emphasis-2 w--full">
+                    <div class="content w--full">
+                    <span class="label">
                         {{ memory_icon }}
-                        <span class="label">Memory</span>
+                        Memory: {{ metrics.memory.usage_percent | round }}%
+                    </span>
                     </div>
-                    <div id="memory-gauge-vert" class="gauge-container-vertical"></div>
+                    <div class="track w--full">
+                    <div class="fill" style="width: {{ metrics.memory.usage_percent }}%"></div>
+                    </div>
+                </div>
                 </div>
                 
-                <!-- Disk Gauge -->
+                <!-- Disk Progress Bar -->
                 <div class="item w--full">
-                    <div class="metric-label-with-icon">
+                <div class="progress-bar w--full">
+                    <div class="content w--full">
+                    <span class="label">
                         {{ disk_icon }}
-                        <span class="label">Disk</span>
+                        Disk: {{ metrics.disk.usage_percent | round }}%
+                    </span>
                     </div>
-                    <div id="disk-gauge-vert" class="gauge-container-vertical"></div>
+                    <div class="track w--full">
+                    <div class="fill" style="width: {{ metrics.disk.usage_percent }}%"></div>
+                    </div>
+                </div>
                 </div>
             </div>
         </div>
@@ -91,59 +117,9 @@
             </div>
         </div>
 </div>
-</div>
     
 <!-- Title Bar -->
 <div class="title_bar">
     {{ server_icon }}
     <span class="title">{{ metrics.system_name }} {{ lastUpdate }}</span>
-    <span class="instance">{{ metrics.host_info.hostname }}</span>
 </div>
-
-<style>
-  .gauge-container-vertical {
-    height: 110px;
-    width: 100%;
-    margin-top: 4px;
-  }
-</style>
-
-<script type="text/javascript">
-  var cpuUsage = {{ metrics.cpu.usage_percent }};
-  var memoryUsage = {{ metrics.memory.usage_percent }};
-  var diskUsage = {{ metrics.disk.usage_percent }};
-
-  // Create gauges for vertical half view
-  createGauge(cpuUsage, "cpu-gauge-vert", {
-    title: null,
-    height: "110px",
-    labels: { 
-      enabled: false
-    },
-    yAxis: {
-      title: null
-    }
-  });
-
-  createGauge(memoryUsage, "memory-gauge-vert", {
-    title: null,
-    height: "110px",
-    labels: { 
-      enabled: false
-    },
-    yAxis: {
-      title: null
-    }
-  });
-
-  createGauge(diskUsage, "disk-gauge-vert", {
-    title: null,
-    height: "110px",
-    labels: { 
-      enabled: false
-    },
-    yAxis: {
-      title: null
-    }
-  });
-</script>

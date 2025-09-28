@@ -1,0 +1,43 @@
+{
+  "name": "trmnl-beszel-plugin",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "TRMNL plugin for displaying system metrics from Beszel monitoring via PocketBase",
+  "main": "server.js",
+  "keywords": [
+    "trmnl",
+    "plugin",
+    "beszel",
+    "system-monitoring",
+    "metrics",
+    "pocketbase",
+    "infrastructure"
+  ],
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js",
+    "trmnlp:serve": "./bin/trmnlp serve",
+    "trmnlp:build": "./bin/trmnlp build",
+    "trmnlp:login": "./bin/trmnlp login",
+    "trmnlp:push": "./bin/trmnlp push",
+    "trmnlp:pull": "./bin/trmnlp pull"
+  },
+  "dependencies": {
+    "dotenv": "^17.2.2",
+    "express": "^4.18.2",
+    "pocketbase": "^0.26.2"
+  },
+  "author": "TRMNL Community",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/your-username/trmnl-beszel-plugin"
+  },
+  "bugs": {
+    "url": "https://github.com/your-username/trmnl-beszel-plugin/issues"
+  },
+  "homepage": "https://github.com/your-username/trmnl-beszel-plugin#readme",
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

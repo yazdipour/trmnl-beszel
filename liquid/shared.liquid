@@ -1,0 +1,207 @@
+{% assign metrics = data %}
+{% assign lastUpdate = metrics.timestamp | date: "%b %d, %H:%M" %}
+
+<!-- Import Highcharts libraries -->
+<script src="https://usetrmnl.com/js/highcharts/12.3.0/highcharts.js"></script>
+<script src="https://usetrmnl.com/js/highcharts/12.3.0/highcharts-more.js"></script>
+<script src="https://usetrmnl.com/js/highcharts/12.3.0/pattern-fill.js"></script>
+
+<style>
+  .metric-icon {
+    display: inline;
+    margin-right: 4px;
+    margin-bottom: 4px;
+    width: 16px;
+    height: 16px;
+  }
+  
+  .metric-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+  
+  .metric-item .content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+  }
+  
+  .metric-label-with-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+  }
+  
+  .progress-bar-container {
+    width: 100%;
+  }
+  
+  .system-header {
+    text-align: center;
+    padding: 8px 0;
+  }
+  
+  .metrics-grid-3 {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+  }
+  
+  .metrics-grid-2 {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
+</style>
+
+<!-- SVG Icon Definitions -->
+{% assign cpu_icon = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="metric-icon"><rect width="16" height="16" x="4" y="4" rx="2"></rect><rect width="6" height="6" x="9" y="9" rx="1"></rect><path d="M15 2v2"></path><path d="M15 20v2"></path><path d="M2 15h2"></path><path d="M2 9h2"></path><path d="M20 15h2"></path><path d="M20 9h2"></path><path d="M9 2v2"></path><path d="M9 20v2"></path></svg>' %}
+
+{% assign memory_icon = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="metric-icon"><path d="M6 19v-3"></path><path d="M10 19v-3"></path><path d="M14 19v-3"></path><path d="M18 19v-3"></path><path d="M8 11V9"></path><path d="M16 11V9"></path><path d="M12 11V9"></path><path d="M2 15h20"></path><path d="M2 7a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v1.1a2 2 0 0 0 0 3.837V17a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2v-5.1a2 2 0 0 0 0-3.837Z"></path></svg>' %}
+
+{% assign disk_icon = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="metric-icon"><line x1="22" x2="2" y1="12" y2="12"></line><path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"></path><line x1="6" x2="6.01" y1="16" y2="16"></line><line x1="10" x2="10.01" y1="16" y2="16"></line></svg>' %}
+
+{% assign uptime_icon = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="metric-icon"><circle cx="12" cy="12" r="10"></circle><polyline points="12,6 12,12 16,14"></polyline></svg>' %}
+
+{% assign temperature_icon = '<svg viewBox="0 0 256 256" fill="currentColor" class="metric-icon"><path d="M212 56a28 28 0 1 0 28 28 28 28 0 0 0-28-28m0 40a12 12 0 1 1 12-12 12 12 0 0 1-12 12m-60 50V40a32 32 0 0 0-64 0v106a56 56 0 1 0 64 0m-16-42h-32V40a16 16 0 0 1 32 0Z"></path></svg>' %}
+
+{% assign load_icon = '<svg viewBox="0 0 24 24" fill="currentColor" class="metric-icon"><path d="M4 2h16v4.5L13.5 12l6.5 5.5V22H4v-4.5l6.5-5.5L4 6.5zm12.3 5L18 5.5V4H6v1.5L7.7 7zM12 13.3l-6 5.2V20h1l5-3 5 3h1v-1.5z"></path></svg>' %}
+
+{% assign network_icon = '<svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="2" viewBox="0 0 24 24" class="metric-icon"><path d="m15 20 3-3h2a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h2l3 3zM6 8v1m4-1v1m4-1v1m4-1v1"></path></svg>' %}
+
+{% assign server_icon = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="image"><rect width="20" height="8" x="2" y="2" rx="2" ry="2"></rect><rect width="20" height="8" x="2" y="14" rx="2" ry="2"></rect><line x1="6" x2="6.01" y1="6" y2="6"></line><line x1="6" x2="6.01" y1="18" y2="18"></line></svg>' %}
+
+<script type="text/javascript">
+  function createGauge(value, containerId, opts) {
+    opts = opts || {
+      title: null,
+      height: "100%",
+      labels: {
+        distance: 15,
+        style: {
+          fontSize: "16px"
+        }
+      },
+      series: {
+        fontSize: "16px"
+      },
+      yAxis: {
+        title: null
+      }
+    };
+
+    Highcharts.chart(containerId, {
+      chart: {
+        type: "gauge",
+        height: opts.height,
+        animation: false
+      },
+      title: {
+        text: opts.title
+      },
+      pane: {
+        startAngle: -150,
+        endAngle: 150,
+        background: {
+          backgroundColor: "transparent",
+          borderWidth: 0
+        }
+      },
+      plotOptions: {
+        gauge: {
+          animation: false,
+          pivot: {
+            backgroundColor: "transparent"
+          },
+          dial: {
+            backgroundColor: "transparent",
+            baseWidth: 0
+          }
+        }
+      },
+      yAxis: {
+        min: 0,
+        max: 100,
+        minorTickInterval: 0,
+        tickColor: "#ffffff",
+        tickLength: 40,
+        tickPixelInterval: 40,
+        tickWidth: 0,
+        lineWidth: 0,
+        className: "description",
+        title: {
+          text: opts.yAxis.title,
+          style: {
+            color: "#000000",
+            fontSize: "16px"
+          }
+        },
+        labels: opts.labels,
+        plotBands: [{
+          from: 1,
+          to: value,
+          color: {
+            pattern: {
+              image: "https://usetrmnl.com/images/grayscale/gray-2.png",
+              width: 12,
+              height: 12
+            }
+          },
+          innerRadius: "82%",
+          borderRadius: "50%"
+        }, {
+          from: value + 1,
+          to: 100,
+          color: {
+            pattern: {
+              image: "https://usetrmnl.com/images/grayscale/gray-5.png",
+              width: 12,
+              height: 12
+            }
+          },
+          innerRadius: "82%",
+          borderRadius: "50%"
+        }]
+      },
+      series: [{
+        name: "Usage",
+        data: [value],
+        dataLabels: {
+          borderWidth: 0,
+          style: {
+            fontSize: "22px",
+            fontWeight: "400"
+          },
+          formatter: function() {
+            return this.y + '%';
+          },
+          y: 0,
+          verticalAlign: 'middle'
+        }
+      }],
+      credits: {
+        enabled: false
+      }
+    });
+  }
+
+  function formatBytes(bytes) {
+    if (bytes === 0) return '0 B';
+    const k = 1024;
+    const sizes = ['B', 'KB', 'MB', 'GB', 'TB'];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(1)) + ' ' + sizes[i];
+  }
+
+  function formatBandwidth(bitsPerSecond) {
+    if (bitsPerSecond === 0) return '0 bps';
+    const k = 1000;
+    const sizes = ['bps', 'Kbps', 'Mbps', 'Gbps'];
+    const i = Math.floor(Math.log(bitsPerSecond) / Math.log(k));
+    return parseFloat((bitsPerSecond / Math.pow(k, i)).toFixed(1)) + ' ' + sizes[i];
+  }
+</script>

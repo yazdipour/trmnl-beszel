@@ -1,0 +1,82 @@
+<div class="view view--quadrant">
+  <div class="layout layout--col gap--small h--full">
+    <!-- Metrics Grid 2x3 -->
+    <div class="item flex-1">
+      <div class="grid grid--cols-2 gap--small h--full">
+        <!-- Row 1 -->
+        <div class="item">
+          <div class="meta"></div>
+          <div class="content text--center">
+            <span class="value value--small value--tnums">{{ metrics.cpu.usage_percent | round }}%</span>
+            <div class="metric-label-with-icon">
+              {{ cpu_icon }}
+              <span class="label">CPU</span>
+            </div>
+          </div>
+        </div>
+        <div class="item">
+          <div class="meta"></div>
+          <div class="content text--center">
+            <span class="value value--small value--tnums">{{ metrics.memory.usage_percent | round }}%</span>
+            <div class="metric-label-with-icon">
+              {{ memory_icon }}
+              <span class="label">RAM</span>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Row 2 -->
+        <div class="item">
+          <div class="meta"></div>
+          <div class="content text--center">
+            <span class="value value--small value--tnums">{{ metrics.disk.usage_percent | round }}%</span>
+            <div class="metric-label-with-icon">
+              {{ disk_icon }}
+              <span class="label">Disk</span>
+            </div>
+          </div>
+        </div>
+        <div class="item">
+          <div class="meta"></div>
+          <div class="content text--center">
+            <span class="value value--small value--tnums">{{ metrics.cpu.load_avg.load_1m }}</span>
+            <div class="metric-label-with-icon">
+              {{ load_icon }}
+              <span class="label">Load</span>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Row 3 -->
+        <div class="item">
+          <div class="meta"></div>
+          <div class="content text--center">
+            <span class="value value--small value--tnums">{{ metrics.disk.temperature }}°C</span>
+            <div class="metric-label-with-icon">
+              {{ temperature_icon }}
+              <span class="label">Temp</span>
+            </div>
+          </div>
+        </div>
+        <div class="item">
+          <div class="meta"></div>
+          <div class="content text--center">
+            <span class="value value--small value--tnums">{{ metrics.uptime.formatted | split: ' ' | slice: 0, 3 | join: ' ' }}</span>            
+            <div class="metric-label-with-icon">
+              {{ uptime_icon }}
+              <span class="label">Uptime</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Title Bar -->
+<div class="title_bar">
+  {{ server_icon }}
+  <span class="title">{{ metrics.system_name }}</span>
+  <span class="instance">{{ lastUpdate }}</span>
+</div>
+

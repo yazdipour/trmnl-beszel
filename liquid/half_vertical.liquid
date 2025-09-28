@@ -1,0 +1,149 @@
+<div class="view view--half-vertical">
+<!-- Main content area -->
+<div class="layout layout--col">
+        <!-- Usage metrics with gauges -->
+        <div class="item w--full flex-1">
+            <div class="layout layout--col gap--medium w--full h--full justify--center">
+                <!-- CPU Gauge -->
+                <div class="item w--full">
+                    <div class="metric-label-with-icon">
+                        {{ cpu_icon }}
+                        <span class="label">CPU</span>
+                    </div>
+                    <div id="cpu-gauge-vert" class="gauge-container-vertical"></div>
+                </div>
+                
+                <!-- Memory Gauge -->
+                <div class="item w--full">
+                    <div class="metric-label-with-icon">
+                        {{ memory_icon }}
+                        <span class="label">Memory</span>
+                    </div>
+                    <div id="memory-gauge-vert" class="gauge-container-vertical"></div>
+                </div>
+                
+                <!-- Disk Gauge -->
+                <div class="item w--full">
+                    <div class="metric-label-with-icon">
+                        {{ disk_icon }}
+                        <span class="label">Disk</span>
+                    </div>
+                    <div id="disk-gauge-vert" class="gauge-container-vertical"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <!-- Additional metrics in equal grid -->
+        <div class="item flex-1">
+            <div class="grid grid--cols-2 gap--medium h--full">
+                <div class="col">
+                <div class="item metric-item h--full">
+                    <div class="content">
+                    <span class="value value--small value--tnums">{{ metrics.uptime.formatted | split: ' ' | slice: 0, 3 | join: ' ' }}</span>
+                    <div class="metric-label-with-icon">
+                        {{ uptime_icon }}
+                        <span class="label">Uptime</span>
+                    </div>
+                    </div>
+                </div>
+                </div>
+                <div class="col">
+                <div class="item metric-item h--full">
+                    <div class="content">
+                    <span class="value value--small value--tnums">{{ metrics.cpu.load_avg.load_1m }}</span>
+                    <div class="metric-label-with-icon">
+                        {{ load_icon }}
+                        <span class="label">Load</span>
+                    </div>
+                    </div>
+                </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bottom row metrics in equal grid -->
+        <div class="item flex-1">
+            <div class="grid grid--cols-2 gap--medium h--full">
+                <div class="col">
+                <div class="item metric-item h--full">
+                    <div class="content">
+                    <span class="value value--small value--tnums">{{ metrics.disk.temperature }}°C</span>
+                    <div class="metric-label-with-icon">
+                        {{ temperature_icon }}
+                        <span class="label">Temp</span>
+                    </div>
+                    </div>
+                </div>
+                </div>
+                <div class="col">
+                <div class="item metric-item h--full">
+                    <div class="content">
+                    <span class="value value--small value--tnums">{{ metrics.cpu.cores }}c/{{ metrics.cpu.threads }}t</span>
+                    <div class="metric-label-with-icon">
+                        {{ cpu_icon }}
+                        <span class="label">Cores</span>
+                    </div>
+                    </div>
+                </div>
+                </div>
+            </div>
+        </div>
+</div>
+</div>
+    
+<!-- Title Bar -->
+<div class="title_bar">
+    {{ server_icon }}
+    <span class="title">{{ metrics.system_name }} {{ lastUpdate }}</span>
+    <span class="instance">{{ metrics.host_info.hostname }}</span>
+</div>
+
+<style>
+  .gauge-container-vertical {
+    height: 110px;
+    width: 100%;
+    margin-top: 4px;
+  }
+</style>
+
+<script type="text/javascript">
+  var cpuUsage = {{ metrics.cpu.usage_percent }};
+  var memoryUsage = {{ metrics.memory.usage_percent }};
+  var diskUsage = {{ metrics.disk.usage_percent }};
+
+  // Create gauges for vertical half view
+  createGauge(cpuUsage, "cpu-gauge-vert", {
+    title: null,
+    height: "110px",
+    labels: { 
+      enabled: false
+    },
+    yAxis: {
+      title: null
+    }
+  });
+
+  createGauge(memoryUsage, "memory-gauge-vert", {
+    title: null,
+    height: "110px",
+    labels: { 
+      enabled: false
+    },
+    yAxis: {
+      title: null
+    }
+  });
+
+  createGauge(diskUsage, "disk-gauge-vert", {
+    title: null,
+    height: "110px",
+    labels: { 
+      enabled: false
+    },
+    yAxis: {
+      title: null
+    }
+  });
+</script>

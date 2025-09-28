@@ -1,0 +1,151 @@
+<div class="view view--half-horizontal">
+  <div class="grid grid--cols-4 gap--medium h--full">
+    <!-- CPU Gauge Column -->
+    <div class="col">
+      <div class="layout layout--col h--full">
+        <div class="item">
+          <div class="metric-label-with-icon">
+            {{ cpu_icon }}
+            <span class="label">CPU</span>
+          </div>
+        </div>
+        <div class="item flex-1">
+          <div id="cpu-gauge-half" class="gauge-container-full"></div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Memory Gauge Column -->
+    <div class="col">
+      <div class="layout layout--col h--full">
+        <div class="item">
+          <div class="metric-label-with-icon">
+            {{ memory_icon }}
+            <span class="label">Memory</span>
+          </div>
+        </div>
+        <div class="item flex-1">
+          <div id="memory-gauge-half" class="gauge-container-full"></div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Disk Gauge Column -->
+    <div class="col">
+      <div class="layout layout--col h--full">
+        <div class="item">
+          <div class="metric-label-with-icon">
+            {{ disk_icon }}
+            <span class="label">Disk</span>
+          </div>
+        </div>
+        <div class="item flex-1">
+          <div id="disk-gauge-half" class="gauge-container-full"></div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- System Information Column -->
+    <div class="col">
+      <div class="layout layout--col justify--center h--full">
+        <div class="item system-header">
+          <div class="meta"></div>
+          <div class="content">
+            <span class="value value--medium font--bold">{{ metrics.system_name }}</span>
+            <div class="metric-label-with-icon">
+              {{ uptime_icon }}
+              <span class="label">{{ metrics.uptime.formatted }}</span>
+            </div>
+          </div>
+        </div>
+        <div class="item">
+          <div class="meta"></div>
+          <div class="content text--center">
+            <span class="value value--small value--tnums">{{ metrics.cpu.load_avg.load_1m }}</span>
+            <div class="metric-label-with-icon">
+              {{ load_icon }}
+              <span class="label">Load Avg</span>
+            </div>
+          </div>
+        </div>
+        <div class="item">
+           <div class="meta"></div>
+           <div class="content text--center">
+            <span class="value value--small value--tnums">{{ metrics.disk.temperature }}°C</span>
+            <div class="metric-label-with-icon">
+              {{ temperature_icon }}
+              <span class="label">Temp</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Title Bar -->
+<div class="title_bar">
+  {{ server_icon }}
+  <span class="title">System Metrics {{ lastUpdate }}</span>
+  <span class="instance">{{ metrics.system_name }} • Beszel {{ metrics.host_info.beszel_version }}</span>
+</div>
+
+<style>
+  .gauge-container-full {
+    height: 100%;
+    width: 100%;
+    min-height: 180px;
+  }
+</style>
+
+<script type="text/javascript">
+  var cpuUsage = {{ metrics.cpu.usage_percent }};
+  var memoryUsage = {{ metrics.memory.usage_percent }};
+  var diskUsage = {{ metrics.disk.usage_percent }};
+
+  // Create full-size gauges for half horizontal view
+  createGauge(cpuUsage, "cpu-gauge-half", {
+    title: null,
+    height: "100%",
+    labels: { 
+      enabled: true,
+      distance: 10,
+      style: {
+        fontSize: "0.9em"
+      }
+    },
+    yAxis: {
+      title: null
+    }
+  });
+
+  createGauge(memoryUsage, "memory-gauge-half", {
+    title: null,
+    height: "100%",
+    labels: { 
+      enabled: true,
+      distance: 10,
+      style: {
+        fontSize: "0.9em"
+      }
+    },
+    yAxis: {
+      title: null
+    }
+  });
+
+  createGauge(diskUsage, "disk-gauge-half", {
+    title: null,
+    height: "100%",
+    labels: { 
+      enabled: true,
+      distance: 10,
+      style: {
+        fontSize: "0.9em"
+      }
+    },
+    yAxis: {
+      title: null
+    }
+  });
+</script>

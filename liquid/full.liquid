@@ -1,0 +1,135 @@
+<div class="view view--full">
+  <div class="grid grid--cols-2 gap--large h--full">
+    <!-- Left column: CPU Gauge and Progress Bars -->
+    <div class="col">
+      <div class="layout layout--col gap--medium h--full">
+        <!-- CPU Gauge -->
+        <div class="item flex-1 layout layout--col">
+             <span class="label w--full">
+                {{ cpu_icon }}
+                CPU
+              </span>
+          <div id="cpu-gauge" class="item h--full"></div>
+        </div>
+        <!-- Memory Progress Bar -->
+        <div class="item w--full">
+          <div class="progress-bar progress-bar--emphasis-2 w--full">
+            <div class="content">
+              <span class="label">
+                {{ memory_icon }}
+                Memory
+              </span>
+              <span class="value value--xxsmall">{{ metrics.memory.usage_percent | round }}%</span>
+            </div>
+            <div class="track">
+              <div class="fill" style="width: {{ metrics.memory.usage_percent }}%"></div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Disk Progress Bar -->
+        <div class="item w--full">
+          <div class="progress-bar w--full">
+            <div class="content">
+              <span class="label">
+                {{ disk_icon }}
+                Disk
+              </span>
+              <span class="value value--xxsmall">{{ metrics.disk.usage_percent | round }}%</span>
+            </div>
+            <div class="track">
+              <div class="fill" style="width: {{ metrics.disk.usage_percent }}%"></div>
+            </div>
+          </div>
+        </div>
+        <div class="divider"></div>
+      </div>
+    </div>
+
+    <!-- Right column: System information -->
+    <div class="col">
+      <div class="layout layout--col gap--medium h--full justify--between">
+        <div class="item">
+            <div class="meta"></div>
+            <div class="content">
+                <span class="value value--tnums">{{ metrics.uptime.formatted }}</span>
+                <span class="label">
+                  {{ uptime_icon }}
+                  Uptime
+                </span>
+            </div>
+        </div>
+        
+        <div class="item">
+            <div class="meta"></div>
+            <div class="content">
+                <span class="value value--tnums">{{ metrics.disk.temperature }}°C</span>
+                <span class="label">
+                  {{ temperature_icon }}
+                  Temperature
+                </span>
+            </div>
+        </div>
+        
+        <div class="item">
+            <div class="meta"></div>
+          <div class="content">
+            <span class="value value--tnums">{{ metrics.cpu.load_avg.load_1m }}</span>
+            <span class="label">
+              {{ load_icon }}
+              Load Average
+            </span>
+          </div>
+        </div>
+        
+        <div class="item">
+            <div class="meta"></div>
+          <div class="content">
+            <span class="value value--tnums">{{ metrics.cpu.cores }}c/{{ metrics.cpu.threads }}t</span>
+            <span class="label">
+              {{ cpu_icon }}
+              CPU Cores/Threads
+            </span>
+          </div>
+        </div>
+        <div class="item">
+            <div class="meta"></div>
+          <div class="content">
+            <span class="value value--tnums">{{ metrics.network.bandwidth_bits | divided_by: 1000000 }}MB/s</span>
+            <span class="label">
+              {{ network_icon }}
+              Network
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Title Bar -->
+<div class="title_bar">
+  {{ server_icon }}
+  <span class="title">System Metrics {{ lastUpdate }}</span>
+  <span class="instance">{{ metrics.system_name }} • Beszel {{ metrics.host_info.beszel_version }}</span>
+</div>
+
+<script type="text/javascript">
+  var cpuUsage = {{ metrics.cpu.usage_percent }};
+
+  // Create CPU gauge
+  createGauge(cpuUsage, "cpu-gauge", {
+    title: null,
+    height: "240px",
+    labels: { 
+      enabled: true,
+      distance: 12,
+      style: {
+        fontSize: "1em"
+      }
+    },
+    yAxis: {
+      title: null
+    }
+  });
+</script>   

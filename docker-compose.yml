@@ -3,13 +3,7 @@ services:
     build: src
     ports:
       - "3000:3000"
-    environment:
-      # Set these environment variables or use .env file
-      - POCKETBASE_URL=${POCKETBASE_URL}
-      - POCKETBASE_EMAIL=${POCKETBASE_EMAIL}
-      - POCKETBASE_PASSWORD=${POCKETBASE_PASSWORD}
-      - PRIVATE_PLUGIN_URL=${PRIVATE_PLUGIN_URL}
     restart: unless-stopped
-    # Optionally mount .env file instead of setting environment variables
+    # Load environment variables from .env file
     env_file:
       - src/.env

@@ -117,17 +117,7 @@ function formatUptime(seconds) {
 }
 
 // Routes
-app.get('/', (req, res) => {
-  res.json({
-    service: 'TRMNL Beszel System Metrics API',
-    version: '1.0.0',
-    endpoints: {
-      metrics: '/metrics'
-    }
-  });
-});
-
-app.get('/metrics', async (req, res) => {
+app.get('/', async (req, res) => {
   try {
     const metrics = await getSystemMetrics();
     

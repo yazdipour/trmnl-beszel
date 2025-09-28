@@ -15,16 +15,12 @@
   ],
   "scripts": {
     "start": "node server.js",
-    "dev": "node --watch server.js",
-    "trmnlp:serve": "./bin/trmnlp serve",
-    "trmnlp:build": "./bin/trmnlp build",
-    "trmnlp:login": "./bin/trmnlp login",
-    "trmnlp:push": "./bin/trmnlp push",
-    "trmnlp:pull": "./bin/trmnlp pull"
+    "dev": "node --watch server.js"
   },
   "dependencies": {
     "dotenv": "^17.2.2",
     "express": "^4.18.2",
+    "node-cron": "^3.0.3",
     "pocketbase": "^0.26.2"
   },
   "author": "TRMNL Community",

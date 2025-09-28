@@ -6,11 +6,12 @@ A TRMNL plugin that displays real-time system metrics from [Beszel monitoring](h
 
 ## Features
 
--  Real-time system metrics from Beszel monitoring
--  CPU, Memory, Disk usage with load averages
--  System uptime and temperature monitoring
--  Container tracking and network bandwidth
--  Multiple view templates for different display sizes
+- ️ Real-time system metrics from Beszel monitoring
+- ️ CPU, Memory, Disk usage with load averages
+- ️ System uptime and temperature monitoring
+- ️ Container tracking and network bandwidth
+- ️ Multiple view templates for different display sizes
+- ️ Automatic updates every 5 minutes via cron scheduling
 - `GET /` Endpoint - System metrics in TRMNL format
 
 ![trmnl-beszel](./assets/shot.jpeg)
@@ -40,6 +41,14 @@ A TRMNL plugin that displays real-time system metrics from [Beszel monitoring](h
   PORT=3000
   ```
 
+## Automatic Updates
+
+The server automatically sends updated metrics to your TRMNL plugin every 5 minutes when `PRIVATE_PLUGIN_URL` is configured. This ensures your e-ink display always shows fresh system data without manual intervention.
+
+- **Schedule**: Every 5 minutes (configurable in code)
+- **Requirement**: Valid `PRIVATE_PLUGIN_URL` in environment variables
+- **Fallback**: Manual updates via `GET /` endpoint
+
 ## TRMNL Setup
 1. Deploy the API server
 2. Create a custom plugin on TRMNL
@@ -55,6 +64,13 @@ A TRMNL plugin that displays real-time system metrics from [Beszel monitoring](h
 └── src/                # API server
     ├── server.js
     └── package.json
+
+## Dependencies
+
+- **express**: Web server framework
+- **pocketbase**: PocketBase SDK for data access
+- **node-cron**: Task scheduling for automatic updates
+- **dotenv**: Environment variable management
 ```
 
 ## Screenshots

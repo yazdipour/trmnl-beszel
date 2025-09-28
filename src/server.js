@@ -1,6 +1,7 @@
 import express from 'express';
 import PocketBase from 'pocketbase';
 import dotenv from 'dotenv';
+import cron from 'node-cron';
 
 // Load environment variables from .env file
 dotenv.config();
@@ -116,19 +117,17 @@ function formatUptime(seconds) {
   return `${days}d ${hours}h ${minutes}m ${secs}s`;
 }
 
-// Routes
-app.get('/', async (req, res) => {
+// Function to update TRMNL plugin with system metrics
+async function updateTRMNLPlugin() {
   try {
     const metrics = await getSystemMetrics();
     
-    // For TRMNL plugin development - return data in the expected format
     const pluginData = {
       merge_variables: {
         data: metrics
       }
     };
 
-    // If PRIVATE_PLUGIN_URL is set, also update the remote TRMNL plugin
     if (PRIVATE_PLUGIN_URL && PRIVATE_PLUGIN_URL !== 'your-plugin-url-here') {
       try {
         const response = await fetch(PRIVATE_PLUGIN_URL, {
@@ -141,18 +140,34 @@ app.get('/', async (req, res) => {
         
         if (response.ok) {
           console.log('✅ Successfully updated TRMNL plugin');
+          return { success: true, data: pluginData };
         } else {
           console.warn(`⚠️ TRMNL API responded with status: ${response.status}`);
+          return { success: false, data: pluginData, status: response.status };
         }
       } catch (error) {
         console.warn('⚠️ Failed to update remote TRMNL plugin:', error.message);
+        return { success: false, data: pluginData, error: error.message };
       }
+    } else {
+      console.log('📋 PRIVATE_PLUGIN_URL not configured - skipping remote update');
+      return { success: false, data: pluginData, reason: 'No plugin URL configured' };
     }
+  } catch (error) {
+    console.error('❌ Error in updateTRMNLPlugin:', error.message);
+    throw error;
+  }
+}
+
+// Routes
+app.get('/', async (req, res) => {
+  try {
+    const result = await updateTRMNLPlugin();
     
     // Always return the plugin data format for local development
-    res.json(pluginData);
+    res.json(result.data);
   } catch (error) {
-    console.error('Error in /metrics endpoint:', error.message);
+    console.error('Error in / endpoint:', error.message);
     res.status(500).json({
       success: false,
       error: 'Failed to process system metrics',
@@ -166,7 +181,7 @@ async function startServer() {
   // Start the server regardless of PocketBase connection
   app.listen(port, '0.0.0.0', () => {
     console.log(`🚀 TRMNL Beszel API server running on http://0.0.0.0:${port}`);
-    console.log(`📊 Metrics endpoint: http://0.0.0.0:${port}/metrics`);
+    console.log(`📊 Metrics endpoint: http://0.0.0.0:${port}`);
   });
 
   // Try to authenticate with PocketBase in the background
@@ -175,6 +190,21 @@ async function startServer() {
     console.log('⚠️  Server started without PocketBase connection');
     console.log('   The service will continue to run but metrics endpoint will return errors');
     console.log('   Check PocketBase URL and credentials');
+  }
+
+  // Set up cron job to update TRMNL plugin every 5 minutes
+  if (PRIVATE_PLUGIN_URL && PRIVATE_PLUGIN_URL !== 'your-plugin-url-here') {
+    cron.schedule('*/5 * * * *', async () => {
+      console.log('⏰ Running scheduled TRMNL plugin update...');
+      try {
+        await updateTRMNLPlugin();
+      } catch (error) {
+        console.error('❌ Scheduled update failed:', error.message);
+      }
+    });
+    console.log('⏱️  Scheduled automatic updates every 5 minutes');
+  } else {
+    console.log('📋 PRIVATE_PLUGIN_URL not configured - automatic updates disabled');
   }
 }
 

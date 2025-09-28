@@ -2,7 +2,7 @@
 
 <img src="./assets/logo.png" width="120" height="120" alt="logo">
 
-A TRMNL plugin that displays real-time system metrics from [Beszel monitoring](https://github.com/henrygd/beszel) via PocketBase. This plugin shows CPU, memory, disk usage, load averages, uptime, and other system information on your TRMNL e-ink display.
+A TRMNL plugin that displays system metrics from [Beszel monitoring](https://github.com/henrygd/beszel). This plugin shows CPU, memory, disk usage, load averages, uptime, and other system information on your TRMNL e-ink display.
 
 ## Features
 

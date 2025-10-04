@@ -1,3 +1,7 @@
+{% assign cpu_chart_id = "cpu-gauge-half" | append_random %}
+{% assign memory_chart_id = "memory-gauge-half" | append_random %}
+{% assign disk_chart_id = "disk-gauge-half" | append_random %}
+
 <div class="grid grid--cols-4 gap--medium h--full">
   <!-- CPU Gauge Column -->
   <div class="col">
@@ -9,7 +13,7 @@
         </div>
       </div>
       <div class="item flex-1">
-        <div id="cpu-gauge-half" class="gauge-container-full"></div>
+        <div id="{{ cpu_chart_id }}" class="gauge-container-full"></div>
       </div>
     </div>
   </div>
@@ -24,7 +28,7 @@
         </div>
       </div>
       <div class="item flex-1">
-        <div id="memory-gauge-half" class="gauge-container-full"></div>
+        <div id="{{ memory_chart_id }}" class="gauge-container-full"></div>
       </div>
     </div>
   </div>
@@ -39,7 +43,7 @@
         </div>
       </div>
       <div class="item flex-1">
-        <div id="disk-gauge-half" class="gauge-container-full"></div>
+        <div id="{{ disk_chart_id }}" class="gauge-container-full"></div>
       </div>
     </div>
   </div>
@@ -96,7 +100,7 @@
   var diskUsage = {{ metrics.disk.usage_percent }};
 
   // Create full-size gauges for half horizontal view
-  createGauge(cpuUsage, "cpu-gauge-half", {
+  createGauge(cpuUsage, "{{ cpu_chart_id }}", {
     title: null,
     height: "100%",
     labels: { 
@@ -111,7 +115,7 @@
     }
   });
 
-  createGauge(memoryUsage, "memory-gauge-half", {
+  createGauge(memoryUsage, "{{ memory_chart_id }}", {
     title: null,
     height: "100%",
     labels: { 
@@ -126,7 +130,7 @@
     }
   });
 
-  createGauge(diskUsage, "disk-gauge-half", {
+  createGauge(diskUsage, "{{ disk_chart_id }}", {
     title: null,
     height: "100%",
     labels: { 

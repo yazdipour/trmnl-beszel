@@ -1,3 +1,5 @@
+{% assign chart_id = "cpu-gauge" | append_random %}
+
 <div class="grid grid--cols-2 gap--large h--full">
   <!-- Left column: CPU Gauge and Progress Bars -->
   <div class="col">
@@ -8,7 +10,7 @@
           {{ cpu_icon }}
           CPU
         </span>
-        <div id="cpu-gauge" class="item h--full"></div>
+        <div id="{{ chart_id }}" class="item h--full"></div>
       </div>
       <!-- Memory Progress Bar -->
       <div class="item w--full">
@@ -115,7 +117,7 @@
   var cpuUsage = {{ metrics.cpu.usage_percent }};
 
   // Create CPU gauge
-  createGauge(cpuUsage, "cpu-gauge", {
+  createGauge(cpuUsage, "{{ chart_id }}", {
     title: null,
     height: "240px",
     labels: { 

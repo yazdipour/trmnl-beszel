@@ -18,9 +18,8 @@
           <div class="content">
             <span class="label">
               {{ memory_icon }}
-              Memory
+              Memory {{ metrics.memory.usage_percent | round }}%
             </span>
-            <span class="value value--xxsmall">{{ metrics.memory.usage_percent | round }}%</span>
           </div>
           <div class="track">
             <div class="fill" style="width: {{ metrics.memory.usage_percent }}%"></div>
@@ -34,9 +33,8 @@
           <div class="content">
             <span class="label">
               {{ disk_icon }}
-              Disk
+              Disk {{ metrics.disk.usage_percent | round }}%
             </span>
-            <span class="value value--xxsmall">{{ metrics.disk.usage_percent | round }}%</span>
           </div>
           <div class="track">
             <div class="fill" style="width: {{ metrics.disk.usage_percent }}%"></div>

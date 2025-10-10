@@ -56,6 +56,24 @@
     grid-template-columns: repeat(2, 1fr);
     gap: 16px;
   }
+  
+  .gauge-container-full {
+      height: 100%;
+      width: 100%;
+      min-height: 180px;
+  }
+
+  .cpu-fill {
+    width: {{ metrics.cpu.usage_percent }}%;
+  }
+  
+  .memory-fill {
+    width: {{ metrics.memory.usage_percent }}%;
+  }
+  
+  .disk-fill {
+    width: {{ metrics.disk.usage_percent }}%;
+  }
 </style>
 
 <!-- SVG Icon Definitions -->
